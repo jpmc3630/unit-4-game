@@ -1,0 +1,26 @@
+.charactertile {
+
+    float:left;
+    margin: 20px;
+    text-align: center;
+
+
+}
+
+#all-characters {
+
+    background-color: lightblue;
+    height: 200px;
+}
+
+#my-character {
+
+    background-color: lightgreen;
+    height: 200px;
+}
+
+
+#enemy-characters {
+    height: 200px;
+    background-color: rgb(163, 113, 113);
+}
