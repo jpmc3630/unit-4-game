@@ -1,6 +1,7 @@
 let myGame;
 let idCounter = -1;
 
+
 function createCharacter(name, image, health, atp, ctp) {
     idCounter++;
   return {
@@ -45,7 +46,7 @@ function display() {
   var allCharactersDiv = $("#all-characters");
   var myCharacterDiv = $("#my-character");
   var OpponentDiv = $("#enemy-characters");
-  var statusBar = $("header");
+  
 
   var myChar = myGame.allCharacters[myGame.myCharacter];
   var theOpp = myGame.allCharacters[myGame.theOpponent];
@@ -82,11 +83,10 @@ else if (myGame.gameStage == 1) {
       allCharactersDiv.append(getCharacterBlock(enemyChar));
       };
 
-      // update Status bar
-      statusBar.html(`You have chosen <b>${myChar.name}</b>. Now choose which enemy to fight first!`);
-      
+
 
 } else if (myGame.gameStage == 2) {
+  
     //GAME STAGE = 2, First Opponent has been chosen
         // DRAW MY PLAYER 
         myCharacterDiv.html(getCharacterBlock(myChar));
@@ -111,10 +111,17 @@ else if (myGame.gameStage == 1) {
 
 
 
-    // update Status bar
-    statusBar.html(`You have chosen <b>${theOpp.name}</b> as your first opponent!`);
+
+
+
     
       
+
+
+// } else if (myGame.gameStage == 3) {
+
+
+//   // Choose next opponent
 
 
 };
@@ -147,17 +154,27 @@ $(document).ready(function() {
       // set attach with mutliplier, and counter attack power
       let myAttack = (myGame.fightRound) * (myGame.allCharacters[myGame.myCharacter].attackPower);
       let counterAttack = myGame.allCharacters[myGame.theOpponent].attackPower;
-      alert (myAttack);
+      
        // subtract them from the the object model
       myGame.allCharacters[myGame.theOpponent].health -= myAttack;
       myGame.allCharacters[myGame.myCharacter].health -= counterAttack;
-
+      // update status bar 
+      $("header").html(`You attacked <b>${myGame.allCharacters[myGame.theOpponent].name}</b> for ${myAttack} damage.<BR> <b>${myGame.allCharacters[myGame.theOpponent].name}</b> attacked you for ${counterAttack} damage.`);
       
-
-      // myGame.gameStage = 3;
       
+      if (myGame.allCharacters[myGame.theOpponent].health <= 0) {
+        if (myGame.remainingEnemies.length > 0) {
+          $("header").html(`You have defeated <b>${myGame.allCharacters[myGame.theOpponent].name}</b><BR>Choose your next opponent!`);
+          myGame.gameStage = 1; //go back to pick next opponent
+        } else {
+          alert('youv bloody won mate');
+          // you have won
+        };
+        
+       
+      };
   
-    }
+    };
 
 
 
@@ -183,8 +200,11 @@ $(document).ready(function() {
                   myGame.remainingEnemies.push(myGame.allCharacters[i].id);
               };
           };
+
           myGame.gameStage = 1;
-          
+          // update Status bar
+          $("header").html(`You have chosen <b>${myGame.allCharacters[myGame.myCharacter].name}</b>. Now choose which enemy to fight first!`);
+      
       
         } else if (myGame.gameStage==1) { // game stage is choose first enemy
           
@@ -200,6 +220,10 @@ $(document).ready(function() {
               };
               
               myGame.gameStage = 2; 
+
+              // update Status bar
+              $("header").html(`You have chosen to fight <b>${myGame.allCharacters[myGame.theOpponent].name}</b>!`);
+    
 
           };
 
