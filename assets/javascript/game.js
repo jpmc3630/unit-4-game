@@ -1,6 +1,5 @@
 let myGame;
 let idCounter = -1;
-let gameStage = 0;
 
 function createCharacter(name, image, health, atp, ctp) {
     idCounter++;
@@ -16,11 +15,14 @@ function createCharacter(name, image, health, atp, ctp) {
 }
 
 function reset() {
+    
   myGame = {
     allCharacters : [],
-    enemyCharacters : [],
+    remainingEnemies : [],
     myCharacter : 0,
-    enemyCharacter : 0
+    theOpponent : 0,
+    gameStage : 0,
+    fightRound : 0
   }
   myGame.allCharacters.push(createCharacter("Boba Fett","https://via.placeholder.com/100",100,10,5));
   myGame.allCharacters.push(createCharacter("Darth Vader","https://via.placeholder.com/100",150,20,2));
@@ -42,17 +44,22 @@ function getCharacterBlock(character) {
 function display() {
   var allCharactersDiv = $("#all-characters");
   var myCharacterDiv = $("#my-character");
-  var enemyCharactersDiv = $("#enemy-characters");
+  var OpponentDiv = $("#enemy-characters");
   var statusBar = $("header");
 
+  var myChar = myGame.allCharacters[myGame.myCharacter];
+  var theOpp = myGame.allCharacters[myGame.theOpponent];
 
   allCharactersDiv.html("");
   myCharacterDiv.html("");
-  
+  OpponentDiv.html("");
+
+
 
   
-if (gameStage == 0) {
+if (myGame.gameStage == 0) {
     //GAME STAGE = 0
+
   // draws all characters
   for (let i = 0; i < myGame.allCharacters.length; i++) {
     let character = myGame.allCharacters[i];
@@ -61,36 +68,62 @@ if (gameStage == 0) {
   
 } 
 
-else if (gameStage == 1) {
-    //GAME STAGE = 1
+else if (myGame.gameStage == 1) {
+    //GAME STAGE = 1, Player has been chosen
+    
     // DRAW MY PLAYER 
-
-
-         myCharacterDiv.html(getCharacterBlock(myGame.myCharacter));
-
+    myCharacterDiv.html(getCharacterBlock(myChar));
 
     // draw ENEMEY PLAYERS
-
-    for (let i = 0; i < myGame.enemyCharacters.length; i++) {
-        let character = myGame.enemyCharacters[i];
+    for (let i = 0; i < myGame.remainingEnemies.length; i++) {
         
-         enemyCharactersDiv.append(getCharacterBlock(character));
+      let enemyChar = myGame.allCharacters[myGame.remainingEnemies[i]];
+        
+      allCharactersDiv.append(getCharacterBlock(enemyChar));
       };
 
       // update Status bar
-      statusBar.html(`You have chosen <b>${myGame.myCharacter.name}</b>. Now choose which enemy to fight first!`);
+      statusBar.html(`You have chosen <b>${myChar.name}</b>. Now choose which enemy to fight first!`);
+      
+
+} else if (myGame.gameStage == 2) {
+    //GAME STAGE = 2, First Opponent has been chosen
+        // DRAW MY PLAYER 
+        myCharacterDiv.html(getCharacterBlock(myChar));
+
+        // DRAW MY OPONENT
+        OpponentDiv.html(getCharacterBlock(theOpp));
+
+        // DRAW REMAINING CHAR TILES
+        for (let i = 0; i < myGame.remainingEnemies.length; i++) {
+        
+          let enemyChar = myGame.allCharacters[myGame.remainingEnemies[i]];
+            
+          allCharactersDiv.append(getCharacterBlock(enemyChar));
+          };
+        
+    // create attack button
+          let attackButton = $("<button>");
+          attackButton.text('Attack');
+          attackButton.addClass('attack-button');
+          OpponentDiv.append(attackButton);
+           
+
+
+
+    // update Status bar
+    statusBar.html(`You have chosen <b>${theOpp.name}</b> as your first opponent!`);
+    
+      
+
 
 };
 
 
 
-
+console.clear();
+console.log(myGame);
   
-
-// allCharactersDiv.text(myGame.allCharacters[0].id);
-// console.log(myGame);
-
-
 
 }
 
@@ -98,50 +131,89 @@ else if (gameStage == 1) {
 
 $(document).ready(function() {
 
-reset();
-display();
+  reset();
+  display();
 
-// myGame.playerCharacter = myGame.allCharacters[0];
 
-// display();
 
-$(".charactertile").on("click", function () {
+  // Attack Button on click
+  $('body').on('click', '.attack-button', function (){
     
 
+    if (myGame.gameStage == 2) { //game stage is THE FIGHT
+      
+      myGame.fightRound++;
 
-    if (gameStage==0) { //game stage is choose my player
-        
-        for (let i = 0; i < myGame.allCharacters.length; i++) {
-            if (i == this.id) {
-                myGame.myCharacter = myGame.allCharacters[this.id];
-            } else {
-                let character = myGame.allCharacters[i];
-                myGame.enemyCharacters.push(myGame.allCharacters[i]);
-            };
-        };
-        gameStage = 1; 
-    };
+      // set attach with mutliplier, and counter attack power
+      let myAttack = (myGame.fightRound) * (myGame.allCharacters[myGame.myCharacter].attackPower);
+      let counterAttack = myGame.allCharacters[myGame.theOpponent].attackPower;
+      alert (myAttack);
+       // subtract them from the the object model
+      myGame.allCharacters[myGame.theOpponent].health -= myAttack;
+      myGame.allCharacters[myGame.myCharacter].health -= counterAttack;
 
+      
 
-    if (gameStage==1) { // game stage is choose my first enemy
-
-    // identify enemy character 
-    //moves seleced enemy TILE into the FIGHT ZONE
-    // create attack button
+      // myGame.gameStage = 3;
+      
+  
+    }
 
 
-
-
-    // gameStage = 2; 
-    };
-
-console.log(myGame);
 
     display();
 
 
 
-});
+
+
+  });
+
+
+  // Character tile on click
+  $('body').on('click', '.charactertile', function (){
+    
+      if (myGame.gameStage==0) { //game stage is choose my player
+          
+          for (let i = 0; i < myGame.allCharacters.length; i++) {
+              if (i == this.id) {
+                  myGame.myCharacter = myGame.allCharacters[this.id].id;
+              } else {
+                  // let character = myGame.allCharacters[i];
+                  myGame.remainingEnemies.push(myGame.allCharacters[i].id);
+              };
+          };
+          myGame.gameStage = 1;
+          
+      
+        } else if (myGame.gameStage==1) { // game stage is choose first enemy
+          
+          // check didn't click own character & push opponent theOpponent object
+          if (this.id != myGame.allCharacters[myGame.myCharacter].id) {
+              myGame.theOpponent = myGame.allCharacters[this.id].id;
+              myGame.remainingEnemies
+
+              for(let i = 0; i < myGame.remainingEnemies.length; i++) {
+
+                // remove current opponent from remaining enemies
+                if(myGame.remainingEnemies[i] == myGame.theOpponent) myGame.remainingEnemies.splice(i, 1);
+              };
+              
+              myGame.gameStage = 2; 
+
+          };
+
+      };
+
+
+
+      display();
+
+
+
+  });
+
+
 
 
 });
