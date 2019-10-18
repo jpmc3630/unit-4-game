@@ -43,6 +43,8 @@ function display() {
   var allCharactersDiv = $("#all-characters");
   var myCharacterDiv = $("#my-character");
   var enemyCharactersDiv = $("#enemy-characters");
+  var statusBar = $("header");
+
 
   allCharactersDiv.html("");
   myCharacterDiv.html("");
@@ -62,7 +64,7 @@ if (gameStage == 0) {
 else if (gameStage == 1) {
     //GAME STAGE = 1
     // DRAW MY PLAYER 
-    
+
 
          myCharacterDiv.html(getCharacterBlock(myGame.myCharacter));
 
@@ -75,8 +77,10 @@ else if (gameStage == 1) {
          enemyCharactersDiv.append(getCharacterBlock(character));
       };
 
+      // update Status bar
+      statusBar.html(`You have chosen <b>${myGame.myCharacter.name}</b>. Now choose which enemy to fight first!`);
 
-}
+};
 
 
 
@@ -105,7 +109,7 @@ $(".charactertile").on("click", function () {
     
 
 
-    if (gameStage==0) {
+    if (gameStage==0) { //game stage is choose my player
         
         for (let i = 0; i < myGame.allCharacters.length; i++) {
             if (i == this.id) {
@@ -115,7 +119,20 @@ $(".charactertile").on("click", function () {
                 myGame.enemyCharacters.push(myGame.allCharacters[i]);
             };
         };
-        gameStage = 1;
+        gameStage = 1; 
+    };
+
+
+    if (gameStage==1) { // game stage is choose my first enemy
+        
+    // identify enemy character 
+    //moves seleced enemy TILE into the FIGHT ZONE
+    // create attack button
+
+
+
+
+    gameStage = 2; 
     };
 
 console.log(myGame);
