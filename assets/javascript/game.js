@@ -124,7 +124,7 @@ $(".charactertile").on("click", function () {
 
 
     if (gameStage==1) { // game stage is choose my first enemy
-        
+
     // identify enemy character 
     //moves seleced enemy TILE into the FIGHT ZONE
     // create attack button
@@ -132,7 +132,7 @@ $(".charactertile").on("click", function () {
 
 
 
-    gameStage = 2; 
+    // gameStage = 2; 
     };
 
 console.log(myGame);
