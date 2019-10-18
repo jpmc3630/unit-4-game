@@ -1,26 +1,64 @@
+header {
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+footer {
+    text-align: center;
+    }
+
+img {
+    height: 100px;
+    width: 100px;
+    margin: auto;    
+    display: block;   
+}
+
 .charactertile {
 
     float:left;
     margin: 20px;
     text-align: center;
+}
 
+.spacehack {
+    width: 1px;
+    height: 200px;
+    float: left;
+    margin: 0 0 20px 0;
 
 }
+
+button {
+    margin: 20px auto;    
+    display: block;
+}
+
+.container {
+    margin: 40px auto;
+    width: 595px;
+
+}
+
 
 #all-characters {
 
     background-color: lightblue;
     height: 200px;
+    
 }
 
 #my-character {
 
     background-color: lightgreen;
     height: 200px;
+    width: 143px;
+    margin: 0 0 0 20px;
 }
 
 
 #enemy-characters {
     height: 200px;
-    background-color: rgb(163, 113, 113);
+    width: 143px;
+    background-color: lightcoral;
 }
